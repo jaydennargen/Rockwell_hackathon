@@ -1,0 +1,9 @@
+case_id,catalog,part_description,serial_number,received_date,failure_details,expected_cause,expected_area,expected_status,min_confidence,max_confidence,notes
+fan-wear-autorelease,R1394CAM75IH/C,MOD AXIS INTL HTSNK 15KW 35.0A CONT,NEW001,2026-10-01,"FAN NOISY, OVERTEMP FAULT AFTER 20 MIN",wear_out,fan_cooling,AUTO_RELEASED,0.70,,clear text + strong family history
+drive-no-output,R2094BM01S/D,KINETIX 6000 AXIS MODULE,NEW002,2026-10-01,"NO OUTPUT ON AXIS, UNIT DEAD",component_failure,pcba_circuitry,AUTO_RELEASED,,,category names
+raw-sap-labels,R2711PT10C4D1,PANELVIEW PLUS 1000 TERMINAL,NEW003,2026-10-01,TOUCHSCREEN NOT RESPONDING IN CORNER - WORN,Worn / End of Life,Touchscreen,AUTO_RELEASED,,,expected values given as raw SAP strings
+motor-bearing,RMPLB330P,MPL SERVO MOTOR,NEW004,2026-10-01,BEARING GRINDING NOISE AT SPEED,wear_out,motor_mechanical,AUTO_RELEASED,,,
+no-info-escalates,R2094BM01S/D,KINETIX 6000 AXIS MODULE,NEW005,2026-10-01,NO INFORMATION GIVEN,component_failure,pcba_circuitry,NEEDS_REVIEW,,0.69,uninformative text falls back to history and escalates
+firmware-unusual-cause,R2094BM01S/D,KINETIX 6000 AXIS MODULE,NEW006,2026-10-01,FAULT AFTER FIRMWARE UPDATE,configuration_error,,NEEDS_REVIEW,,,cause this family rarely has
+repeat-return,R2094BM01S/D,KINETIX 6000 AXIS MODULE,REP001,2026-10-01,"NO OUTPUT, SAME AS LAST TIME",component_failure,pcba_circuitry,NEEDS_REVIEW,,,repaired 47 days earlier
+unknown-family,R9999X,Widget,NEW007,2026-10-01,SCREEN CRACKED,physical_damage,hmi_display,NEEDS_REVIEW,,,no history and no manual section

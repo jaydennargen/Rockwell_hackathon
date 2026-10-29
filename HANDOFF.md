@@ -63,6 +63,11 @@ _Proposals to change backend/app/schemas.py, contracts/fixtures, or the API tabl
 ## WS2: Frontend, specialist
 ## WS3: Backend API
 ## WS4: Triage pipeline
+- **Testbench (2026-10-29):** `python scripts/testbench.py <cases> [--history <extract>]` runs a file of test
+  orders through the live pipeline and prints PASS/FAIL per case (exit 0/1/2). Cases: CSV/xlsx/JSON/SQLite with
+  optional `expected_cause/area/status`, `min/max_confidence`; or a full SAP extract / gold.db graded against the
+  technician labels. Test orders are removed from `--history`. `tests/test_triage_testbench.py` runs every
+  `tests/cases/*_cases.*` file under pytest. Columns: `tests/cases/README.md`. `sample_history.csv` is synthetic.
 ## WS5: Chat agent
 ## WS6: Databricks data layer
 ## WS7: Hardware bridge
