@@ -16,30 +16,11 @@ import re
 from datetime import datetime, timezone
 from pathlib import Path
 
+from triage.llm import FakeLLM
+from triage.tools import clean_text  # noqa: F401  (re-exported; tests import it from here)
+
 MANUAL = json.loads((Path(__file__).parent / "data" / "manual_sops.json").read_text())
 THRESHOLD = 0.70
-
-_NOISE = re.compile(
-    r"\b(?:SERIAL(?: NUMBER)?|S/N|SN)\s*[:=#]\s*\S+"   # Serial Number: X, SN:X, S/N: X
-    r"|\bSN\s+\d\S*"                                    # SN 31805783 (not SNAPPED)
-    r"|SHIP/END CUSTOMER PO:?\s*\S+"
-    r"|\bPO\s*(?:#|NO\.?)?\s*[:=#]\s*\S+|\bPO#\S+"       # PO#=123, PO: 123 (not POWER)
-    r"|RAAMP BARCODE\s*=\s*\S+|STORES(?: CODE)?#?\s*=\s*\S+|CAT#\s*=\s*\S+",
-    re.I,
-)
-_EMPTY = re.compile(
-    r"NO (REASON|INFORMATION|INFO|SUFFICIENT)|NOT SPECIFIED|UNKNOWN|NOT REPORTED|NO PROVIDED|"
-    r"DID NOT IDENTIFY|FAILURE NOT SPECIFIED|NO FAILURE",
-    re.I,
-)
-
-
-def clean_text(raw: str) -> tuple[str, bool]:
-    text = _NOISE.sub(" ", raw or "")
-    text = re.sub(r"\s+", " ", text).strip(" -/:.'\"")
-    informative = len(text) >= 8 and not _EMPTY.search(text)
-    return text, informative
-
 
 def _sop(area: str, cause: str) -> dict | None:
     for s in MANUAL["sections"]:
@@ -95,6 +76,29 @@ REASON_TEXT = {
 }
 
 
+MOCK_NOTE = "Mock pipeline: template score, not computed from repair history."
+
+
+def _categories(tpl: dict, text: str, informative: bool, desc: str) -> list[dict]:
+    """Per-category confidence for the mock: the text signal is real (FakeLLM keyword match on the
+    submitted text); the history part is the template score and is labeled as such."""
+    ev = json.loads(FakeLLM()._extract({"text": text, "informative": informative,
+                                         "part_description": desc}))["evidence"]
+    out = []
+    for kind, cats in (("cause", tpl["causes"]), ("area", list(dict.fromkeys(c for c, _ in tpl["areas"])))):
+        for c in cats:
+            phrase = ev.get(c)
+            if phrase:
+                reason, delta = f'The failure description mentions "{phrase}".', 0.08
+            elif informative:
+                reason, delta = f"The failure description doesn't point to this {'cause' if kind == 'cause' else 'affected area'}.", -0.12
+            else:
+                reason, delta = "No usable failure description, so this comes from repair history only.", -0.25
+            out.append({"kind": kind, "category": c, "score": round(min(max(tpl["score"] + delta, 0.05), 0.95), 2),
+                        "reasons": [reason, MOCK_NOTE]})
+    return out
+
+
 def mock_triage(order: dict, now: datetime | None = None) -> dict:
     """Build a FULL (unfiltered) report dict matching schemas.TriageReport."""
     now = now or datetime.now(timezone.utc)
@@ -147,7 +151,8 @@ def mock_triage(order: dict, now: datetime | None = None) -> dict:
         },
         "unit_history": [],
         "review": None,
-        "confidence": {"score": round(max(score, 0.05), 2), "threshold": THRESHOLD, "reasons": reasons},
+        "confidence": {"score": round(max(score, 0.05), 2), "threshold": THRESHOLD, "reasons": reasons,
+                       "categories": _categories(tpl, text, informative, order.get("part_description", ""))},
         "parts_to_prestage": [{"part": p, "freq": f, "n": n} for p, f, n in tpl["parts"]],
         "npf_risk": {"family_rate": tpl["npf"], "flag": tpl["npf"] >= 0.10},
         "bench_evidence": [],

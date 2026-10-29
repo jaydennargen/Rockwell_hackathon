@@ -6,14 +6,14 @@ import Wordmark from "../components/Wordmark.jsx";
 const ROLES = [
   {
     role: "requester",
-    title: "Send units in",
-    body: "Submit repair orders and read the triage report for each one.",
+    title: "Field technician",
+    body: "Submit a repair order and get the likely cause and troubleshooting steps.",
     who: "Dana Whitfield, Van Meter Inc",
   },
   {
     role: "specialist",
-    title: "Review repairs",
-    body: "See every request and verify the ones the system wasn't sure about.",
+    title: "Repair specialist",
+    body: "Review escalated tickets: AI confidence per category and why.",
     who: "Luis Ortega, repair specialist",
   },
 ];
@@ -43,10 +43,9 @@ export default function LoginPage() {
     <main className="login">
       <div className="login-inner">
         <Wordmark />
-        <h1 className="login-title">Repair orders in. Technician-ready reports out.</h1>
+        <h1 className="login-title">Failure triage for repair orders</h1>
         <p className="login-sub">
-          Submit a repair order and get the likely cause, affected areas, and troubleshooting steps. Orders the
-          system isn't confident about go to a specialist first.
+          Orders the AI isn't confident about go to a specialist before anything is released.
         </p>
         <div className="login-roles">
           {ROLES.map((r) => (

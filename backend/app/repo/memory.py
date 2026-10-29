@@ -1,9 +1,9 @@
-"""In-memory repo seeded from contracts/fixtures (WS0). Resets on restart.
-WS3 adds local.py (SQLite) and databricks.py with the same interface."""
+"""In-memory repo seeded from contracts/fixtures (DATA_BACKEND=memory; used by tests). Resets on restart."""
 import copy
-import json
 from pathlib import Path
 from typing import Optional
+
+from app.repo.seed import demo_data
 
 
 class MemoryRepo:
@@ -18,14 +18,7 @@ class MemoryRepo:
 
     @classmethod
     def from_fixtures(cls, path: Path) -> "MemoryRepo":
-        users = [json.loads((path / f).read_text()) for f in ("me_requester.json", "me_specialist.json")]
-        users.append({"email": "orders@midwestcontrols.demo", "name": "Sam Patel",
-                      "role": "requester", "org": "Midwest Controls Supply"})
-        seed = json.loads((path / "seed_orders.json").read_text())
-        released = next(s for s in seed if s["report"]["status"] == "AUTO_RELEASED")
-        history = json.loads((path / "chat_history.json").read_text())["messages"]
-        chat = {(released["report"]["order_id"], released["submitted_by"]): history}
-        return cls(users, seed, chat)
+        return cls(*demo_data(path))
 
     # users
     def get_user(self, email: str) -> Optional[dict]:

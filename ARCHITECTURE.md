@@ -43,7 +43,7 @@ Data-layer details (table schemas, category mapping, confidence-model training) 
 | Env var | Values | Default | Effect |
 |---|---|---|---|
 | `AUTH_MODE` | `demo` \| `databricks` | `demo` | Demo login picker vs. the identity Databricks Apps passes in |
-| `DATA_BACKEND` | `memory` \| `local` \| `databricks` | `memory` | In-memory store seeded from fixtures (WS0) vs. SQLite file (WS3) vs. Delta tables through a SQL warehouse |
+| `DATA_BACKEND` | `memory` \| `local` \| `databricks` | `local` | In-memory store seeded from fixtures (tests) vs. SQLite file (seeded on first run) vs. Delta tables through a SQL warehouse |
 | `PIPELINE` | `mock` \| `live` | `mock` | Return fixture reports after a 2 s delay vs. run the real triage pipeline |
 | `LLM_MODE` | `fake` \| `databricks` | `fake` | Deterministic fake responses vs. the serving endpoint |
 | `CHAT_MODE` | `fake` \| `agent` \| `genie` | `fake` | Chat backend |
@@ -64,7 +64,7 @@ Roles live in an `app_users` table (`email`, `name`, `role`, `org`). Demo seed: 
 | Submit form + bulk upload | ✅ | ✅ |
 | Report: header, status, summary, predicted areas & cause, troubleshooting steps, unit history | ✅ *only once released* (`AUTO_RELEASED`, `APPROVED`, `EDITED`) | ✅ always |
 | Report while `NEEDS_REVIEW` | Escalation notice in plain language + reasons, **no predictions** | Full draft |
-| Confidence score / threshold numbers | ❌ (plain-language reasons only) | ✅ |
+| Confidence score / threshold numbers, per-category confidence + why | ❌ (plain-language reasons only) | ✅ |
 | Parts to pre-stage, NPF risk, bench evidence, trace link | ❌ | ✅ |
 | Review panel (approve / edit / reject) | ❌ | ✅ |
 | Specialist notes after review | ✅ | ✅ |
@@ -197,7 +197,8 @@ TriageReport   { order_id, status, status_label, created_at, updated_at,
                  unit_history?:   [{ order_id, date, causes: str[] }]
                  review?:         { decision, notes, reviewer, reviewed_at }
                  // specialist only ↓
-                 confidence?:     { score, threshold, reasons: str[] }
+                 confidence?:     { score, threshold, reasons: str[],
+                                    categories: [{ kind: "cause"|"area", category, score, reasons: str[] }] }
                  parts_to_prestage?: [{ part, freq, n }]
                  npf_risk?:       { family_rate, flag }
                  bench_evidence?: [{ name, value, unit, spec_min, spec_max, pass, source }]

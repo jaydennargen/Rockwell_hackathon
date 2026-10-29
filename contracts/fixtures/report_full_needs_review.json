@@ -55,6 +55,35 @@
     "threshold": 0.7,
     "reasons": [
       "The failure description didn't include usable details."
+    ],
+    "categories": [
+      {
+        "kind": "cause",
+        "category": "wear_out",
+        "score": 0.56,
+        "reasons": [
+          "No usable failure description, so this comes from repair history only.",
+          "Mock pipeline: template score, not computed from repair history."
+        ]
+      },
+      {
+        "kind": "area",
+        "category": "fan_cooling",
+        "score": 0.56,
+        "reasons": [
+          "No usable failure description, so this comes from repair history only.",
+          "Mock pipeline: template score, not computed from repair history."
+        ]
+      },
+      {
+        "kind": "area",
+        "category": "pcba_circuitry",
+        "score": 0.56,
+        "reasons": [
+          "No usable failure description, so this comes from repair history only.",
+          "Mock pipeline: template score, not computed from repair history."
+        ]
+      }
     ]
   },
   "parts_to_prestage": [

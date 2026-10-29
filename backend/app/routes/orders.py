@@ -2,7 +2,7 @@ import io
 from datetime import datetime, timezone
 from typing import Literal
 
-from fastapi import APIRouter, BackgroundTasks, Depends, File, Header, UploadFile
+from fastapi import APIRouter, BackgroundTasks, Depends, File, Header, Request, UploadFile
 
 from app import config
 from app.auth import current_user, require_specialist
@@ -12,6 +12,7 @@ from app.repo import get_repo
 from app.schemas import (BulkResult, EvidenceIn, OrderCreated, OrderIn, OrderList, ReviewIn,
                          TriageReport)
 from app.visibility import RELEASED, filter_report, filter_summary
+from triage.confidence import rescore_with_evidence
 
 router = APIRouter(prefix="/api/orders")
 
@@ -145,10 +146,12 @@ def review(order_id: str, body: ReviewIn, user: dict = Depends(require_specialis
 
 
 @router.post("/{order_id}/evidence", response_model=TriageReport, response_model_exclude_none=True)
-def evidence(order_id: str, body: EvidenceIn, x_device_token: str | None = Header(default=None),
-             tasks: BackgroundTasks = None):
+def evidence(order_id: str, body: EvidenceIn, request: Request, x_device_token: str | None = Header(default=None)):
     if x_device_token != config.DEVICE_TOKEN:
-        raise ApiError(401, "unauthenticated", "Missing or invalid device token.")
+        try:
+            require_specialist(current_user(request))
+        except ApiError:
+            raise ApiError(401, "unauthenticated", "Sign in as a specialist or send a valid device token.")
     row = get_repo().get_order(order_id)
     if not row:
         raise not_found()
@@ -162,7 +165,7 @@ def evidence(order_id: str, body: EvidenceIn, x_device_token: str | None = Heade
     report = dict(row["report"])
     report["bench_evidence"] = (report.get("bench_evidence") or []) + ms
     report["updated_at"] = _now()
-    # TODO(WS3/WS4): re-score confidence with bench_evidence_supports; only re-route if not reviewed.
+    report = rescore_with_evidence(report)
     get_repo().save_report(order_id, report)
     get_repo().add_evidence(order_id, ms)
     return filter_report(report, "specialist")
