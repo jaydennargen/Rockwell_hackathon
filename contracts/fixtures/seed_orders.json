@@ -1,0 +1,489 @@
+[
+  {
+    "submitted_by": "requester@vanmeter.demo",
+    "order": {
+      "order_number": "67083053",
+      "line_number": 1000,
+      "catalog": "R1394CAM75IH/C",
+      "part_number": "PN-C74863",
+      "part_description": "MOD AXIS INTL HTSNK 15KW 35.0A CONT",
+      "serial_number": "1JAP5JK8",
+      "depot": "P1100",
+      "failure_details": "'No reason given - FQA Serial Number: 1JAP5JK8 Ship/End Customer PO: 140827129",
+      "received_date": "2026-08-13"
+    },
+    "report": {
+      "order_id": "67083053-1000",
+      "status": "NEEDS_REVIEW",
+      "status_label": "NEEDS_REVIEW",
+      "created_at": "2026-10-27T14:00:00+00:00",
+      "updated_at": "2026-10-27T14:00:00+00:00",
+      "header": {
+        "order_number": "67083053",
+        "item": 1000,
+        "part_number": "PN-C74863",
+        "catalog": "R1394CAM75IH/C",
+        "serial": "1JAP5JK8",
+        "description": "MOD AXIS INTL HTSNK 15KW 35.0A CONT",
+        "depot": "P1100",
+        "received_date": "2026-08-13"
+      },
+      "customer_input": {
+        "text": "No reason given - FQA",
+        "informative": false
+      },
+      "summary": "Likely wear out in Component - Fan Assembly, Component - Bus Capacitor. Start with the troubleshooting steps below and confirm before replacing parts.",
+      "predicted": {
+        "areas": [
+          {
+            "category": "fan_cooling",
+            "detail": "Component - Fan Assembly"
+          },
+          {
+            "category": "pcba_circuitry",
+            "detail": "Component - Bus Capacitor"
+          }
+        ],
+        "causes": [
+          "wear_out"
+        ],
+        "rationale": "1394 axis modules most often come back with worn bus capacitors and cooling fans; wear-out is the leading cause for this family."
+      },
+      "procedure": {
+        "section": 6,
+        "title": "Fan / Cooling - Worn / End of Life",
+        "synthetic": true,
+        "loto_required": true,
+        "steps": [
+          "For a Worn/End-of-Life cause code on a fan assembly, check first for elevated bearing noise/vibration and reduced RPM under load: the classic signature of fan-bearing wear.",
+          "Verify airflow/RPM against the unit's rated spec. A worn fan often still spins but underperforms before it fully seizes.",
+          "Do not attempt to lubricate sealed fan bearings not designed for field relubrication. Replace the fan assembly as a unit once wear is confirmed.",
+          "Where available, check the fan's duty-cycle/runtime hours against its rated service life to distinguish premature failure (investigate airflow/temperature root cause) from expected end-of-life wear-out.",
+          "After replacement, verify airflow/RPM against spec before closing up the unit."
+        ]
+      },
+      "unit_history": [],
+      "review": null,
+      "confidence": {
+        "score": 0.56,
+        "threshold": 0.7,
+        "reasons": [
+          "The failure description didn't include usable details."
+        ]
+      },
+      "parts_to_prestage": [
+        {
+          "part": "21509-589-01-CAP,AL ELT-220uF,450V,20%,SNAP,35x30",
+          "freq": 0.52,
+          "n": 231
+        },
+        {
+          "part": "74102-021-02-AXIS SLIDER",
+          "freq": 0.48,
+          "n": 231
+        },
+        {
+          "part": "9101-1520-FAN,AXL,12VDC,40X15MM,8CFM",
+          "freq": 0.28,
+          "n": 231
+        }
+      ],
+      "npf_risk": {
+        "family_rate": 0.138,
+        "flag": true
+      },
+      "bench_evidence": [],
+      "trace_id": "mock-67083053-1000",
+      "error": null,
+      "pending_sections": [
+        "cleaning",
+        "testing"
+      ]
+    }
+  },
+  {
+    "submitted_by": "requester@vanmeter.demo",
+    "order": {
+      "order_number": "66650692",
+      "line_number": 1000,
+      "catalog": "RMPLB330PMK74AA/A",
+      "part_number": "",
+      "part_description": "MP-Series MPL 480V AC Rotary Servo Motor",
+      "serial_number": "326193834",
+      "depot": "P4080",
+      "failure_details": "UNIT VISUALLY INSPECTED, NOTED ROTOR SEEMED TO SPIN VERY EASILY ALTHOUGH IT HAD A BRAKE. ON INVESTIGATION, NOTICED THE ROTOR WAS SNAPPED.",
+      "received_date": "2026-10-20"
+    },
+    "report": {
+      "order_id": "66650692-1000",
+      "status": "AUTO_RELEASED",
+      "status_label": "AUTO_RELEASED",
+      "created_at": "2026-10-27T19:00:00+00:00",
+      "updated_at": "2026-10-27T19:00:00+00:00",
+      "header": {
+        "order_number": "66650692",
+        "item": 1000,
+        "part_number": "",
+        "catalog": "RMPLB330PMK74AA/A",
+        "serial": "326193834",
+        "description": "MP-Series MPL 480V AC Rotary Servo Motor",
+        "depot": "P4080",
+        "received_date": "2026-10-20"
+      },
+      "customer_input": {
+        "text": "UNIT VISUALLY INSPECTED, NOTED ROTOR SEEMED TO SPIN VERY EASILY ALTHOUGH IT HAD A BRAKE. ON INVESTIGATION, NOTICED THE ROTOR WAS SNAPPED",
+        "informative": true
+      },
+      "summary": "Likely wear out in Motors - Bearings, Motors - Encoder / Resolver. Start with the troubleshooting steps below and confirm before replacing parts.",
+      "predicted": {
+        "areas": [
+          {
+            "category": "motor_mechanical",
+            "detail": "Motors - Bearings"
+          },
+          {
+            "category": "motor_mechanical",
+            "detail": "Motors - Encoder / Resolver"
+          }
+        ],
+        "causes": [
+          "wear_out"
+        ],
+        "rationale": "MP-Series servo motor returns are dominated by bearing and encoder wear."
+      },
+      "procedure": {
+        "section": 5,
+        "title": "Motors - Worn / End of Life",
+        "synthetic": true,
+        "loto_required": true,
+        "steps": [
+          "Check for audible or vibration signs of bearing wear before disassembly.",
+          "Measure shaft runout and bearing play against the motor's service-manual tolerance.",
+          "If an encoder/resolver is implicated, verify signal integrity and mounting alignment before replacing the sensor itself.",
+          "Replace bearings as a matched set, not individually, and re-grease per the motor's lubrication spec.",
+          "Re-test running current draw and vibration signature against baseline after reassembly."
+        ]
+      },
+      "unit_history": [],
+      "review": null,
+      "confidence": {
+        "score": 0.86,
+        "threshold": 0.7,
+        "reasons": []
+      },
+      "parts_to_prestage": [
+        {
+          "part": "PN-57548-S/A,HARNESS,STEGMANN,MPF,460V",
+          "freq": 0.67,
+          "n": 305
+        },
+        {
+          "part": "PN-67485- MP-SER,ENCODER,STEG,SINGLE-TURN,GII",
+          "freq": 0.5,
+          "n": 305
+        },
+        {
+          "part": "6203-2RS-BEARING SEALED RACE 2 X SEALS",
+          "freq": 0.38,
+          "n": 305
+        }
+      ],
+      "npf_risk": {
+        "family_rate": 0.006,
+        "flag": false
+      },
+      "bench_evidence": [],
+      "trace_id": "mock-66650692-1000",
+      "error": null,
+      "pending_sections": [
+        "cleaning",
+        "testing"
+      ]
+    }
+  },
+  {
+    "submitted_by": "requester@vanmeter.demo",
+    "order": {
+      "order_number": "66417530",
+      "line_number": 1000,
+      "catalog": "R2711PK7C4D2/A",
+      "part_number": "",
+      "part_description": "PanelView Plus Terminal",
+      "serial_number": "AW0CR7XO",
+      "depot": "P4080",
+      "failure_details": "LOGIC BOARDS IS FAULTY. SERIES IN A OUT A F/W REV IN 3.20.04",
+      "received_date": "2026-10-22"
+    },
+    "report": {
+      "order_id": "66417530-1000",
+      "status": "NEEDS_REVIEW",
+      "status_label": "NEEDS_REVIEW",
+      "created_at": "2026-10-28T00:00:00+00:00",
+      "updated_at": "2026-10-28T00:00:00+00:00",
+      "header": {
+        "order_number": "66417530",
+        "item": 1000,
+        "part_number": "",
+        "catalog": "R2711PK7C4D2/A",
+        "serial": "AW0CR7XO",
+        "description": "PanelView Plus Terminal",
+        "depot": "P4080",
+        "received_date": "2026-10-22"
+      },
+      "customer_input": {
+        "text": "LOGIC BOARDS IS FAULTY. SERIES IN A OUT A F/W REV IN 3.20.04",
+        "informative": true
+      },
+      "summary": "Likely component failure in Touchscreen, Component - Bezel Assembly. No matching procedure; use the general protocol.",
+      "predicted": {
+        "areas": [
+          {
+            "category": "hmi_display",
+            "detail": "Touchscreen"
+          },
+          {
+            "category": "hmi_display",
+            "detail": "Component - Bezel Assembly"
+          }
+        ],
+        "causes": [
+          "component_failure"
+        ],
+        "rationale": "PanelView terminals most often need touch bezel overlays; the manual has no procedure for HMI component failure."
+      },
+      "procedure": {
+        "section": null,
+        "title": "General troubleshooting protocol",
+        "synthetic": true,
+        "loto_required": true,
+        "steps": [
+          "General Troubleshooting Protocol applies. Proceed with standard electrical/mechanical baseline checks."
+        ]
+      },
+      "unit_history": [],
+      "review": null,
+      "confidence": {
+        "score": 0.74,
+        "threshold": 0.7,
+        "reasons": [
+          "No troubleshooting procedure covers this type of failure yet."
+        ]
+      },
+      "parts_to_prestage": [
+        {
+          "part": "PN-140697-PVP1250 Touch Bezel Overlay",
+          "freq": 0.16,
+          "n": 556
+        },
+        {
+          "part": "PN-140454-PVP1000 Touch Bezel Overlay",
+          "freq": 0.1,
+          "n": 556
+        },
+        {
+          "part": "PN-621795-2711P, BEZEL,15 IN TOUCH, SUB-ASSY",
+          "freq": 0.1,
+          "n": 556
+        }
+      ],
+      "npf_risk": {
+        "family_rate": 0.028,
+        "flag": false
+      },
+      "bench_evidence": [],
+      "trace_id": "mock-66417530-1000",
+      "error": null,
+      "pending_sections": [
+        "cleaning",
+        "testing"
+      ]
+    }
+  },
+  {
+    "submitted_by": "requester@vanmeter.demo",
+    "order": {
+      "order_number": "66433026",
+      "line_number": 1000,
+      "catalog": "R1794ASB/E",
+      "part_number": "",
+      "part_description": "Flex Remote I/O Adaptor",
+      "serial_number": "SD1ZU6LD",
+      "depot": "P1190",
+      "failure_details": "***FAULTED - NO INPUTS*** Serial Number: SD1ZU6LD Ship/End Customer PO: 4506251226",
+      "received_date": "2026-10-18"
+    },
+    "report": {
+      "order_id": "66433026-1000",
+      "status": "APPROVED",
+      "status_label": "NEEDS_REVIEW",
+      "created_at": "2026-10-28T05:00:00+00:00",
+      "updated_at": "2026-10-28T07:00:00+00:00",
+      "header": {
+        "order_number": "66433026",
+        "item": 1000,
+        "part_number": "",
+        "catalog": "R1794ASB/E",
+        "serial": "SD1ZU6LD",
+        "description": "Flex Remote I/O Adaptor",
+        "depot": "P1190",
+        "received_date": "2026-10-18"
+      },
+      "customer_input": {
+        "text": "***FAULTED - NO INPUTS***",
+        "informative": true
+      },
+      "summary": "Likely component failure in PCBA - Other. Start with the troubleshooting steps below and confirm before replacing parts.",
+      "predicted": {
+        "areas": [
+          {
+            "category": "pcba_circuitry",
+            "detail": "PCBA - Other"
+          }
+        ],
+        "causes": [
+          "component_failure"
+        ],
+        "rationale": "Component failure on a circuit board is the most common outcome across all product families."
+      },
+      "procedure": {
+        "section": 1,
+        "title": "PCBA / Circuitry - Component Failure",
+        "synthetic": true,
+        "loto_required": true,
+        "steps": [
+          "Power down and discharge the unit per lockout/tagout procedure before opening the enclosure.",
+          "Visually inspect the affected PCBA for obvious component damage: scorching, cracked packages, bulging/leaking electrolytic capacitors, lifted or cold solder joints.",
+          "Before re-energizing, check for shorts/continuity issues across primary power rails with a multimeter.",
+          "If a specific component is visually suspect, confirm with an in-circuit or out-of-circuit component test before replacing it.",
+          "Replace the failed component at the board level by reference designator where feasible, rather than the whole assembly.",
+          "Re-run the full functional test sequence against standard acceptance criteria before return to service."
+        ]
+      },
+      "unit_history": [],
+      "review": {
+        "decision": "approve",
+        "notes": "Confirmed: input circuit failure on the adaptor board. Proceed per Section 1.",
+        "reviewer": "specialist@rockwell.demo",
+        "reviewed_at": "2026-10-28T07:00:00+00:00"
+      },
+      "confidence": {
+        "score": 0.62,
+        "threshold": 0.7,
+        "reasons": [
+          "This product family's repair history doesn't point clearly to one cause."
+        ]
+      },
+      "parts_to_prestage": [],
+      "npf_risk": {
+        "family_rate": 0.076,
+        "flag": false
+      },
+      "bench_evidence": [],
+      "trace_id": "mock-66433026-1000",
+      "error": null,
+      "pending_sections": [
+        "cleaning",
+        "testing"
+      ]
+    }
+  },
+  {
+    "submitted_by": "orders@midwestcontrols.demo",
+    "order": {
+      "order_number": "66339318",
+      "line_number": 1000,
+      "catalog": "R2711PT6C21D8S/B",
+      "part_number": "",
+      "part_description": "PanelView Plus 7 Standard 600",
+      "serial_number": "DE0AI4JH",
+      "depot": "P1190",
+      "failure_details": "UNKNOWN FAILURE Serial Number: DE0AI4JH Ship/End Customer PO: 33469",
+      "received_date": "2026-10-24"
+    },
+    "report": {
+      "order_id": "66339318-1000",
+      "status": "NEEDS_REVIEW",
+      "status_label": "NEEDS_REVIEW",
+      "created_at": "2026-10-28T10:00:00+00:00",
+      "updated_at": "2026-10-28T10:00:00+00:00",
+      "header": {
+        "order_number": "66339318",
+        "item": 1000,
+        "part_number": "",
+        "catalog": "R2711PT6C21D8S/B",
+        "serial": "DE0AI4JH",
+        "description": "PanelView Plus 7 Standard 600",
+        "depot": "P1190",
+        "received_date": "2026-10-24"
+      },
+      "customer_input": {
+        "text": "UNKNOWN FAILURE",
+        "informative": false
+      },
+      "summary": "Likely component failure in Touchscreen, Component - Bezel Assembly. No matching procedure; use the general protocol.",
+      "predicted": {
+        "areas": [
+          {
+            "category": "hmi_display",
+            "detail": "Touchscreen"
+          },
+          {
+            "category": "hmi_display",
+            "detail": "Component - Bezel Assembly"
+          }
+        ],
+        "causes": [
+          "component_failure"
+        ],
+        "rationale": "PanelView terminals most often need touch bezel overlays; the manual has no procedure for HMI component failure."
+      },
+      "procedure": {
+        "section": null,
+        "title": "General troubleshooting protocol",
+        "synthetic": true,
+        "loto_required": true,
+        "steps": [
+          "General Troubleshooting Protocol applies. Proceed with standard electrical/mechanical baseline checks."
+        ]
+      },
+      "unit_history": [],
+      "review": null,
+      "confidence": {
+        "score": 0.49,
+        "threshold": 0.7,
+        "reasons": [
+          "The failure description didn't include usable details.",
+          "No troubleshooting procedure covers this type of failure yet."
+        ]
+      },
+      "parts_to_prestage": [
+        {
+          "part": "PN-140697-PVP1250 Touch Bezel Overlay",
+          "freq": 0.16,
+          "n": 556
+        },
+        {
+          "part": "PN-140454-PVP1000 Touch Bezel Overlay",
+          "freq": 0.1,
+          "n": 556
+        },
+        {
+          "part": "PN-621795-2711P, BEZEL,15 IN TOUCH, SUB-ASSY",
+          "freq": 0.1,
+          "n": 556
+        }
+      ],
+      "npf_risk": {
+        "family_rate": 0.028,
+        "flag": false
+      },
+      "bench_evidence": [],
+      "trace_id": "mock-66339318-1000",
+      "error": null,
+      "pending_sections": [
+        "cleaning",
+        "testing"
+      ]
+    }
+  }
+]

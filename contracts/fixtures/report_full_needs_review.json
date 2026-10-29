@@ -1,0 +1,88 @@
+{
+  "order_id": "67083053-1000",
+  "status": "NEEDS_REVIEW",
+  "status_label": "Needs review",
+  "created_at": "2026-10-27T14:00:00+00:00",
+  "updated_at": "2026-10-27T14:00:00+00:00",
+  "header": {
+    "order_number": "67083053",
+    "item": 1000,
+    "part_number": "PN-C74863",
+    "catalog": "R1394CAM75IH/C",
+    "serial": "1JAP5JK8",
+    "description": "MOD AXIS INTL HTSNK 15KW 35.0A CONT",
+    "depot": "P1100",
+    "received_date": "2026-08-13"
+  },
+  "customer_input": {
+    "text": "No reason given - FQA",
+    "informative": false
+  },
+  "summary": "Likely wear out in Component - Fan Assembly, Component - Bus Capacitor. Start with the troubleshooting steps below and confirm before replacing parts.",
+  "predicted": {
+    "areas": [
+      {
+        "category": "fan_cooling",
+        "detail": "Component - Fan Assembly"
+      },
+      {
+        "category": "pcba_circuitry",
+        "detail": "Component - Bus Capacitor"
+      }
+    ],
+    "causes": [
+      "wear_out"
+    ],
+    "rationale": "1394 axis modules most often come back with worn bus capacitors and cooling fans; wear-out is the leading cause for this family."
+  },
+  "procedure": {
+    "section": 6,
+    "title": "Fan / Cooling - Worn / End of Life",
+    "synthetic": true,
+    "loto_required": true,
+    "steps": [
+      "For a Worn/End-of-Life cause code on a fan assembly, check first for elevated bearing noise/vibration and reduced RPM under load: the classic signature of fan-bearing wear.",
+      "Verify airflow/RPM against the unit's rated spec. A worn fan often still spins but underperforms before it fully seizes.",
+      "Do not attempt to lubricate sealed fan bearings not designed for field relubrication. Replace the fan assembly as a unit once wear is confirmed.",
+      "Where available, check the fan's duty-cycle/runtime hours against its rated service life to distinguish premature failure (investigate airflow/temperature root cause) from expected end-of-life wear-out.",
+      "After replacement, verify airflow/RPM against spec before closing up the unit."
+    ]
+  },
+  "unit_history": [],
+  "review": null,
+  "confidence": {
+    "score": 0.56,
+    "threshold": 0.7,
+    "reasons": [
+      "The failure description didn't include usable details."
+    ]
+  },
+  "parts_to_prestage": [
+    {
+      "part": "21509-589-01-CAP,AL ELT-220uF,450V,20%,SNAP,35x30",
+      "freq": 0.52,
+      "n": 231
+    },
+    {
+      "part": "74102-021-02-AXIS SLIDER",
+      "freq": 0.48,
+      "n": 231
+    },
+    {
+      "part": "9101-1520-FAN,AXL,12VDC,40X15MM,8CFM",
+      "freq": 0.28,
+      "n": 231
+    }
+  ],
+  "npf_risk": {
+    "family_rate": 0.138,
+    "flag": true
+  },
+  "bench_evidence": [],
+  "trace_id": "mock-67083053-1000",
+  "error": null,
+  "pending_sections": [
+    "cleaning",
+    "testing"
+  ]
+}

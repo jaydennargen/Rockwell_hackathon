@@ -1,0 +1,15 @@
+{
+  "reply": {
+    "id": "m4",
+    "role": "assistant",
+    "content": "Across all MP-Series motors in the data, 305 labeled returns were wear-out; the most replaced part was the Stegmann encoder harness.",
+    "sql": "SELECT part, count, freq FROM gold_part_freq WHERE product_family = 'MP' AND cause_category = 'wear_out' ORDER BY count DESC LIMIT 3",
+    "sources": [
+      {
+        "label": "gold_part_freq",
+        "ref": "table:gold_part_freq"
+      }
+    ],
+    "created_at": "2026-10-27T19:07:00+00:00"
+  }
+}

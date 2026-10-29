@@ -1,0 +1,40 @@
+/* Design tokens. Change the look here, not in components. */
+:root {
+  /* palette */
+  --ground: #e7ebec;      /* galvanized steel */
+  --sheet: #f7f9f9;
+  --ink: #17262f;         /* deep slate */
+  --steel: #5e6e78;
+  --rule: #c9d2d6;
+  --rule-strong: #9fadb4;
+  --manila: #e8d7a8;      /* the repair tag, nowhere else */
+  --manila-edge: #c9b57c;
+  --manila-ink: #3d3214;
+
+  --ok: #2e6b4e;
+  --review: #a86f0c;      /* inspection amber */
+  --failed: #9e3434;
+  --closed: #5e6e78;
+  --processing: #5e6e78;
+  --focus: #2457b3;
+
+  --ok-wash: #e3eee8;
+  --review-wash: #f6ecd6;
+  --failed-wash: #f4e1e1;
+
+  /* type */
+  --font: "Archivo Variable", "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-code: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --step--1: 0.8125rem;   /* 13 */
+  --step-0: 0.9375rem;    /* 15 */
+  --step-1: 1.125rem;     /* 18 */
+  --step-2: 1.5rem;       /* 24 */
+  --step-3: 2rem;         /* 32 */
+  --step-4: 2.75rem;      /* 44 */
+
+  /* space and shape */
+  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px; --s7: 48px; --s8: 64px;
+  --radius-control: 3px;
+  --radius-panel: 2px;
+  --page-max: 1240px;
+}

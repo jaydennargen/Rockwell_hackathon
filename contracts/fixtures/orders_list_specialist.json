@@ -1,0 +1,65 @@
+{
+  "items": [
+    {
+      "order_id": "67083053-1000",
+      "catalog": "R1394CAM75IH/C",
+      "part_description": "MOD AXIS INTL HTSNK 15KW 35.0A CONT",
+      "serial_number": "1JAP5JK8",
+      "status": "NEEDS_REVIEW",
+      "status_label": "Needs review",
+      "submitted_by": "requester@vanmeter.demo",
+      "created_at": "2026-10-27T14:00:00+00:00",
+      "confidence_score": 0.56,
+      "top_reason": "The failure description didn't include usable details."
+    },
+    {
+      "order_id": "66650692-1000",
+      "catalog": "RMPLB330PMK74AA/A",
+      "part_description": "MP-Series MPL 480V AC Rotary Servo Motor",
+      "serial_number": "326193834",
+      "status": "AUTO_RELEASED",
+      "status_label": "Auto-released",
+      "submitted_by": "requester@vanmeter.demo",
+      "created_at": "2026-10-27T19:00:00+00:00",
+      "confidence_score": 0.86,
+      "top_reason": null
+    },
+    {
+      "order_id": "66417530-1000",
+      "catalog": "R2711PK7C4D2/A",
+      "part_description": "PanelView Plus Terminal",
+      "serial_number": "AW0CR7XO",
+      "status": "NEEDS_REVIEW",
+      "status_label": "Needs review",
+      "submitted_by": "requester@vanmeter.demo",
+      "created_at": "2026-10-28T00:00:00+00:00",
+      "confidence_score": 0.74,
+      "top_reason": "No troubleshooting procedure covers this type of failure yet."
+    },
+    {
+      "order_id": "66433026-1000",
+      "catalog": "R1794ASB/E",
+      "part_description": "Flex Remote I/O Adaptor",
+      "serial_number": "SD1ZU6LD",
+      "status": "APPROVED",
+      "status_label": "Approved",
+      "submitted_by": "requester@vanmeter.demo",
+      "created_at": "2026-10-28T05:00:00+00:00",
+      "confidence_score": 0.62,
+      "top_reason": "This product family's repair history doesn't point clearly to one cause."
+    },
+    {
+      "order_id": "66339318-1000",
+      "catalog": "R2711PT6C21D8S/B",
+      "part_description": "PanelView Plus 7 Standard 600",
+      "serial_number": "DE0AI4JH",
+      "status": "NEEDS_REVIEW",
+      "status_label": "Needs review",
+      "submitted_by": "orders@midwestcontrols.demo",
+      "created_at": "2026-10-28T10:00:00+00:00",
+      "confidence_score": 0.49,
+      "top_reason": "The failure description didn't include usable details."
+    }
+  ],
+  "total": 5
+}

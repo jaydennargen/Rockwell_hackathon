@@ -1,0 +1,15 @@
+# Databricks App entry point. Build the frontend first (cd frontend && npm run build) so
+# frontend/dist is included in the deployed source; FastAPI serves it.
+# Verify the port env var name against the current Databricks Apps docs before deploying.
+command: ["sh", "-c", "cd backend && uvicorn app.main:app --host 0.0.0.0 --port ${DATABRICKS_APP_PORT:-8000}"]
+env:
+  - name: AUTH_MODE
+    value: databricks
+  - name: DATA_BACKEND
+    value: databricks
+  - name: PIPELINE
+    value: live
+  - name: LLM_MODE
+    value: databricks
+  - name: CHAT_MODE
+    value: agent

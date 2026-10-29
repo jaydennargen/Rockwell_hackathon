@@ -1,0 +1,118 @@
+{
+  "source": "Synthetic Troubleshooting & Repair Reference Manual (ZS-authored stand-in, NOT Rockwell documentation)",
+  "synthetic": true,
+  "sections": [
+    {
+      "section": 1,
+      "title": "PCBA / Circuitry - Component Failure",
+      "steps": [
+        "Power down and discharge the unit per lockout/tagout procedure before opening the enclosure.",
+        "Visually inspect the affected PCBA for obvious component damage: scorching, cracked packages, bulging/leaking electrolytic capacitors, lifted or cold solder joints.",
+        "Before re-energizing, check for shorts/continuity issues across primary power rails with a multimeter.",
+        "If a specific component is visually suspect, confirm with an in-circuit or out-of-circuit component test before replacing it.",
+        "Replace the failed component at the board level by reference designator where feasible, rather than the whole assembly.",
+        "Re-run the full functional test sequence against standard acceptance criteria before return to service."
+      ],
+      "area_category": "pcba_circuitry",
+      "cause_category": "component_failure"
+    },
+    {
+      "section": 2,
+      "title": "PCBA / Circuitry - Contamination",
+      "steps": [
+        "Before addressing the board itself, inspect and remedy the contamination ingress path: enclosure door seals/gaskets and cooling-fan filtration.",
+        "Remove the affected PCBA and inspect for visible residue, corrosion, or conductive debris on traces and connector pins.",
+        "Clean per an approved electronics-safe, no-residue solvent procedure. Do not rely on compressed air alone if the contamination is conductive/particulate, since that can redistribute rather than remove it.",
+        "Inspect for corrosion-related trace damage under magnification before re-installing.",
+        "Re-test and monitor. If contamination recurs on the same unit, escalate the environmental root cause rather than repeatedly repairing the symptom."
+      ],
+      "area_category": "pcba_circuitry",
+      "cause_category": "contamination"
+    },
+    {
+      "section": 3,
+      "title": "PCBA / Circuitry - Configuration Error",
+      "steps": [
+        "Do not replace hardware. This is a configuration issue, not a component failure.",
+        "Verify the unit's firmware/parameter set against the current approved configuration baseline for its catalog/model.",
+        "Re-apply the correct configuration profile using the approved configuration tool, not manual field edits.",
+        "Document the incorrect configuration found, to support root-causing how it was introduced.",
+        "Re-run the full functional test after reconfiguration."
+      ],
+      "area_category": "pcba_circuitry",
+      "cause_category": "configuration_error"
+    },
+    {
+      "section": 4,
+      "title": "PCBA / Circuitry - Worn / End of Life",
+      "steps": [
+        "For a Worn/End-of-Life cause code on a PCB assembly, inspect electrolytic capacitors first (bulging, leaking, or discoloration at the vent) before assuming the whole board needs replacement.",
+        "Measure capacitance/ESR if test equipment is available and compare against nominal spec.",
+        "If capacitors test within spec, check other age-related wear points: connector contact oxidation, relay contact wear.",
+        "Replace only the confirmed worn component(s) where board-level rework is feasible."
+      ],
+      "area_category": "pcba_circuitry",
+      "cause_category": "wear_out"
+    },
+    {
+      "section": 5,
+      "title": "Motors - Worn / End of Life",
+      "steps": [
+        "Check for audible or vibration signs of bearing wear before disassembly.",
+        "Measure shaft runout and bearing play against the motor's service-manual tolerance.",
+        "If an encoder/resolver is implicated, verify signal integrity and mounting alignment before replacing the sensor itself.",
+        "Replace bearings as a matched set, not individually, and re-grease per the motor's lubrication spec.",
+        "Re-test running current draw and vibration signature against baseline after reassembly."
+      ],
+      "area_category": "motor_mechanical",
+      "cause_category": "wear_out"
+    },
+    {
+      "section": 6,
+      "title": "Fan / Cooling - Worn / End of Life",
+      "steps": [
+        "For a Worn/End-of-Life cause code on a fan assembly, check first for elevated bearing noise/vibration and reduced RPM under load: the classic signature of fan-bearing wear.",
+        "Verify airflow/RPM against the unit's rated spec. A worn fan often still spins but underperforms before it fully seizes.",
+        "Do not attempt to lubricate sealed fan bearings not designed for field relubrication. Replace the fan assembly as a unit once wear is confirmed.",
+        "Where available, check the fan's duty-cycle/runtime hours against its rated service life to distinguish premature failure (investigate airflow/temperature root cause) from expected end-of-life wear-out.",
+        "After replacement, verify airflow/RPM against spec before closing up the unit."
+      ],
+      "area_category": "fan_cooling",
+      "cause_category": "wear_out"
+    },
+    {
+      "section": 7,
+      "title": "Fan / Cooling - Component Failure",
+      "steps": [
+        "Determine whether the failure is mechanical (bearing/blade) or electrical (drive circuitry) before replacing the whole fan assembly.",
+        "For a suspected mechanical failure, check for physical obstruction, blade damage, and bearing freeplay.",
+        "For a suspected electrical failure, verify fan drive voltage is present at the connector before condemning the fan motor itself.",
+        "Replace the fan assembly as a unit if the motor has failed; if only the drive circuit failed, board-level repair may be possible (see Section 1).",
+        "After replacement, verify airflow/RPM against spec before closing up the unit."
+      ],
+      "area_category": "fan_cooling",
+      "cause_category": "component_failure"
+    },
+    {
+      "section": 8,
+      "title": "HMI / Display - Worn / End of Life",
+      "steps": [
+        "For touchscreen wear-out symptoms (reduced sensitivity, dead zones), clean the surface and check for protective-film degradation before assuming a hardware failure.",
+        "Test touch response across the full surface in a diagnostic/calibration mode if available.",
+        "For display backlight dimming, compare against a known-good unit's brightness rather than subjective judgment alone.",
+        "Replace the touchscreen/display assembly as a unit. Field-level component repair is not typically supported at this level."
+      ],
+      "area_category": "hmi_display",
+      "cause_category": "wear_out"
+    }
+  ],
+  "general": {
+    "section": null,
+    "title": "General troubleshooting protocol",
+    "area_category": null,
+    "cause_category": null,
+    "steps": [
+      "General Troubleshooting Protocol applies. Proceed with standard electrical/mechanical baseline checks."
+    ]
+  }
+}

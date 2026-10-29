@@ -1,0 +1,20 @@
+# secrets & local data
+.env
+backend/.data/
+*.xlsx
+!contracts/**/*.xlsx
+
+# python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+
+# node
+frontend/node_modules/
+frontend/dist/
+
+# os/editor
+.DS_Store
+.vscode/
+.idea/

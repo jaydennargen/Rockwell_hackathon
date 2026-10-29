@@ -1,0 +1,57 @@
+{
+  "order_id": "66650692-1000",
+  "status": "AUTO_RELEASED",
+  "status_label": "Report ready",
+  "created_at": "2026-10-27T19:00:00+00:00",
+  "updated_at": "2026-10-27T19:00:00+00:00",
+  "header": {
+    "order_number": "66650692",
+    "item": 1000,
+    "part_number": "",
+    "catalog": "RMPLB330PMK74AA/A",
+    "serial": "326193834",
+    "description": "MP-Series MPL 480V AC Rotary Servo Motor",
+    "depot": "P4080",
+    "received_date": "2026-10-20"
+  },
+  "customer_input": {
+    "text": "UNIT VISUALLY INSPECTED, NOTED ROTOR SEEMED TO SPIN VERY EASILY ALTHOUGH IT HAD A BRAKE. ON INVESTIGATION, NOTICED THE ROTOR WAS SNAPPED",
+    "informative": true
+  },
+  "summary": "Likely wear out in Motors - Bearings, Motors - Encoder / Resolver. Start with the troubleshooting steps below and confirm before replacing parts.",
+  "predicted": {
+    "areas": [
+      {
+        "category": "motor_mechanical",
+        "detail": "Motors - Bearings"
+      },
+      {
+        "category": "motor_mechanical",
+        "detail": "Motors - Encoder / Resolver"
+      }
+    ],
+    "causes": [
+      "wear_out"
+    ],
+    "rationale": "MP-Series servo motor returns are dominated by bearing and encoder wear."
+  },
+  "procedure": {
+    "section": 5,
+    "title": "Motors - Worn / End of Life",
+    "synthetic": true,
+    "loto_required": true,
+    "steps": [
+      "Check for audible or vibration signs of bearing wear before disassembly.",
+      "Measure shaft runout and bearing play against the motor's service-manual tolerance.",
+      "If an encoder/resolver is implicated, verify signal integrity and mounting alignment before replacing the sensor itself.",
+      "Replace bearings as a matched set, not individually, and re-grease per the motor's lubrication spec.",
+      "Re-test running current draw and vibration signature against baseline after reassembly."
+    ]
+  },
+  "unit_history": [],
+  "review": null,
+  "pending_sections": [
+    "cleaning",
+    "testing"
+  ]
+}

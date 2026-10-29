@@ -1,0 +1,31 @@
+{
+  "order_id": "67083053-1000",
+  "status": "NEEDS_REVIEW",
+  "status_label": "With a specialist",
+  "created_at": "2026-10-27T14:00:00+00:00",
+  "updated_at": "2026-10-27T14:00:00+00:00",
+  "header": {
+    "order_number": "67083053",
+    "item": 1000,
+    "part_number": "PN-C74863",
+    "catalog": "R1394CAM75IH/C",
+    "serial": "1JAP5JK8",
+    "description": "MOD AXIS INTL HTSNK 15KW 35.0A CONT",
+    "depot": "P1100",
+    "received_date": "2026-08-13"
+  },
+  "customer_input": {
+    "text": "No reason given - FQA",
+    "informative": false
+  },
+  "pending_sections": [
+    "cleaning",
+    "testing"
+  ],
+  "escalation": {
+    "message": "A repair specialist is reviewing this order before a report is released. You'll see the report here once it's verified.",
+    "reasons": [
+      "The failure description didn't include usable details."
+    ]
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "items": [
+    {
+      "order_id": "67083053-1000",
+      "catalog": "R1394CAM75IH/C",
+      "part_description": "MOD AXIS INTL HTSNK 15KW 35.0A CONT",
+      "serial_number": "1JAP5JK8",
+      "status": "NEEDS_REVIEW",
+      "status_label": "With a specialist",
+      "submitted_by": "requester@vanmeter.demo",
+      "created_at": "2026-10-27T14:00:00+00:00",
+      "confidence_score": null,
+      "top_reason": null
+    },
+    {
+      "order_id": "66650692-1000",
+      "catalog": "RMPLB330PMK74AA/A",
+      "part_description": "MP-Series MPL 480V AC Rotary Servo Motor",
+      "serial_number": "326193834",
+      "status": "AUTO_RELEASED",
+      "status_label": "Report ready",
+      "submitted_by": "requester@vanmeter.demo",
+      "created_at": "2026-10-27T19:00:00+00:00",
+      "confidence_score": null,
+      "top_reason": null
+    },
+    {
+      "order_id": "66417530-1000",
+      "catalog": "R2711PK7C4D2/A",
+      "part_description": "PanelView Plus Terminal",
+      "serial_number": "AW0CR7XO",
+      "status": "NEEDS_REVIEW",
+      "status_label": "With a specialist",
+      "submitted_by": "requester@vanmeter.demo",
+      "created_at": "2026-10-28T00:00:00+00:00",
+      "confidence_score": null,
+      "top_reason": null
+    },
+    {
+      "order_id": "66433026-1000",
+      "catalog": "R1794ASB/E",
+      "part_description": "Flex Remote I/O Adaptor",
+      "serial_number": "SD1ZU6LD",
+      "status": "APPROVED",
+      "status_label": "Verified by specialist",
+      "submitted_by": "requester@vanmeter.demo",
+      "created_at": "2026-10-28T05:00:00+00:00",
+      "confidence_score": null,
+      "top_reason": null
+    }
+  ],
+  "total": 4
+}
