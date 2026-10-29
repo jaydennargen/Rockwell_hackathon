@@ -69,6 +69,35 @@
         "threshold": 0.7,
         "reasons": [
           "The failure description didn't include usable details."
+        ],
+        "categories": [
+          {
+            "kind": "cause",
+            "category": "wear_out",
+            "score": 0.56,
+            "reasons": [
+              "No usable failure description, so this comes from repair history only.",
+              "Mock pipeline: template score, not computed from repair history."
+            ]
+          },
+          {
+            "kind": "area",
+            "category": "fan_cooling",
+            "score": 0.56,
+            "reasons": [
+              "No usable failure description, so this comes from repair history only.",
+              "Mock pipeline: template score, not computed from repair history."
+            ]
+          },
+          {
+            "kind": "area",
+            "category": "pcba_circuitry",
+            "score": 0.56,
+            "reasons": [
+              "No usable failure description, so this comes from repair history only.",
+              "Mock pipeline: template score, not computed from repair history."
+            ]
+          }
         ]
       },
       "parts_to_prestage": [
@@ -169,7 +198,27 @@
       "confidence": {
         "score": 0.86,
         "threshold": 0.7,
-        "reasons": []
+        "reasons": [],
+        "categories": [
+          {
+            "kind": "cause",
+            "category": "wear_out",
+            "score": 0.74,
+            "reasons": [
+              "The failure description doesn't point to this cause.",
+              "Mock pipeline: template score, not computed from repair history."
+            ]
+          },
+          {
+            "kind": "area",
+            "category": "motor_mechanical",
+            "score": 0.94,
+            "reasons": [
+              "The failure description mentions \"rotor\".",
+              "Mock pipeline: template score, not computed from repair history."
+            ]
+          }
+        ]
       },
       "parts_to_prestage": [
         {
@@ -267,6 +316,26 @@
         "threshold": 0.7,
         "reasons": [
           "No troubleshooting procedure covers this type of failure yet."
+        ],
+        "categories": [
+          {
+            "kind": "cause",
+            "category": "component_failure",
+            "score": 0.82,
+            "reasons": [
+              "The failure description mentions \"fault\".",
+              "Mock pipeline: template score, not computed from repair history."
+            ]
+          },
+          {
+            "kind": "area",
+            "category": "hmi_display",
+            "score": 0.62,
+            "reasons": [
+              "The failure description doesn't point to this affected area.",
+              "Mock pipeline: template score, not computed from repair history."
+            ]
+          }
         ]
       },
       "parts_to_prestage": [
@@ -371,6 +440,26 @@
         "threshold": 0.7,
         "reasons": [
           "This product family's repair history doesn't point clearly to one cause."
+        ],
+        "categories": [
+          {
+            "kind": "cause",
+            "category": "component_failure",
+            "score": 0.7,
+            "reasons": [
+              "The failure description mentions \"fault\".",
+              "Mock pipeline: template score, not computed from repair history."
+            ]
+          },
+          {
+            "kind": "area",
+            "category": "pcba_circuitry",
+            "score": 0.7,
+            "reasons": [
+              "The failure description mentions \"no input\".",
+              "Mock pipeline: template score, not computed from repair history."
+            ]
+          }
         ]
       },
       "parts_to_prestage": [],
@@ -454,6 +543,26 @@
         "reasons": [
           "The failure description didn't include usable details.",
           "No troubleshooting procedure covers this type of failure yet."
+        ],
+        "categories": [
+          {
+            "kind": "cause",
+            "category": "component_failure",
+            "score": 0.49,
+            "reasons": [
+              "No usable failure description, so this comes from repair history only.",
+              "Mock pipeline: template score, not computed from repair history."
+            ]
+          },
+          {
+            "kind": "area",
+            "category": "hmi_display",
+            "score": 0.49,
+            "reasons": [
+              "No usable failure description, so this comes from repair history only.",
+              "Mock pipeline: template score, not computed from repair history."
+            ]
+          }
         ]
       },
       "parts_to_prestage": [

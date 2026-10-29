@@ -143,10 +143,19 @@ class Review(BaseModel):
     reviewed_at: datetime
 
 
+class CategoryConfidence(BaseModel):
+    """Confidence in one predicted cause or area, with the plain-language signals behind it."""
+    kind: Literal["cause", "area"]
+    category: str  # a CauseCategory when kind == "cause", an AreaCategory when kind == "area"
+    score: float
+    reasons: list[str]
+
+
 class Confidence(BaseModel):
     score: float
     threshold: float
-    reasons: list[str]
+    reasons: list[str]                                   # routing rules that fired
+    categories: list[CategoryConfidence] = []            # one per predicted cause and area
 
 
 class PartPrediction(BaseModel):

@@ -53,7 +53,27 @@
   "confidence": {
     "score": 0.86,
     "threshold": 0.7,
-    "reasons": []
+    "reasons": [],
+    "categories": [
+      {
+        "kind": "cause",
+        "category": "wear_out",
+        "score": 0.74,
+        "reasons": [
+          "The failure description doesn't point to this cause.",
+          "Mock pipeline: template score, not computed from repair history."
+        ]
+      },
+      {
+        "kind": "area",
+        "category": "motor_mechanical",
+        "score": 0.94,
+        "reasons": [
+          "The failure description mentions \"rotor\".",
+          "Mock pipeline: template score, not computed from repair history."
+        ]
+      }
+    ]
   },
   "parts_to_prestage": [
     {

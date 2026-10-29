@@ -1,6 +1,6 @@
 import { AREA_LABELS, CAUSE_LABELS, fmtDate, fmtDateTime } from "../lib/format.js";
 import EscalationNotice from "./EscalationNotice.jsx";
-import RepairTag from "./RepairTag.jsx";
+import ReportHeader from "./ReportHeader.jsx";
 import Section from "./Section.jsx";
 import BenchEvidence from "./specialist/BenchEvidence.jsx";
 import ConfidenceSection from "./specialist/ConfidenceSection.jsx";
@@ -12,7 +12,7 @@ export default function ReportView({ report }) {
   const processing = r.status === "PROCESSING";
   return (
     <article className="report">
-      <RepairTag report={r} />
+      <ReportHeader report={r} />
       <div className="sheet">
         {processing && (
           <Section title="Triage in progress">
