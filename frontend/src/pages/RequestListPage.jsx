@@ -18,7 +18,22 @@ export default function RequestListPage() {
   const filter = specialist ? params.get("filter") || "needs_review" : "all";
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
+  const [retrying, setRetrying] = useState(false);
   const nav = useNavigate();
+  const failed = specialist ? (data?.items || []).filter((o) => o.status === "FAILED") : [];
+
+  async function retryFailed() {
+    setRetrying(true);
+    setError(null);
+    try {
+      for (const o of failed) await api.retryOrder(o.order_id);
+      await load();
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setRetrying(false);
+    }
+  }
 
   const load = useCallback(
     () => api.listOrders({ filter }).then(setData).catch((e) => setError(e.message)),
@@ -63,6 +78,16 @@ export default function RequestListPage() {
         </div>
       )}
 
+      {failed.length > 0 && (
+        <div className="row-actions retry-bar">
+          <p>
+            {failed.length} order{failed.length === 1 ? "" : "s"} couldn't be processed.
+          </p>
+          <button type="button" className="btn btn-secondary" onClick={retryFailed} disabled={retrying}>
+            {retrying ? "Starting triage" : "Run failed orders again"}
+          </button>
+        </div>
+      )}
       {error && <p className="form-error" role="alert">{error}</p>}
       {!data && !error && <p className="muted pad">Loading requests</p>}
 

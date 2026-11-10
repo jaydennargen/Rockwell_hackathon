@@ -24,6 +24,6 @@ export function nextSample() {
   const today = new Date().toISOString().slice(0, 10);
   return {
     order_number: String(67100000 + Math.floor(Math.random() * 89999)),
-    line_number: 1000, received_date: today, additional_info: "", ...s,
+    line_number: 1000, received_date: today, additional_info: "", purchase_order: "", ...s,
   };
 }

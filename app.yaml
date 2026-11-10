@@ -1,10 +1,15 @@
-# Databricks App entry point. Build the frontend first (cd frontend && npm run build) so
-# frontend/dist is included in the deployed source; FastAPI serves it.
-# Verify the port env var name against the current Databricks Apps docs before deploying.
-command: ["sh", "-c", "cd backend && uvicorn app.main:app --host 0.0.0.0 --port ${DATABRICKS_APP_PORT:-8000}"]
+# Databricks Apps runtime config. Build steps run first (root package.json -> frontend build,
+# root requirements.txt -> pip), then this command. FastAPI serves the API and frontend/dist.
+# Databricks injects DATABRICKS_HOST, DATABRICKS_CLIENT_ID/SECRET (the app's service principal) and
+# DATABRICKS_APP_PORT; nothing secret belongs in this file. See DEPLOY.md.
+command: ["uvicorn", "app.main:app", "--app-dir", "backend", "--host", "0.0.0.0", "--port", "$DATABRICKS_APP_PORT"]
+
 env:
+  # demo = role picker with the demo accounts (Dana Whitfield, technician / Luis Ortega, specialist).
+  # Opening the app still requires a Databricks workspace login. For real per-person identity, set
+  # databricks and list reviewers' Databricks login emails in SPECIALIST_EMAILS.
   - name: AUTH_MODE
-    value: databricks
+    value: demo
   - name: DATA_BACKEND
     value: databricks
   - name: PIPELINE
@@ -12,4 +17,20 @@ env:
   - name: LLM_MODE
     value: databricks
   - name: CHAT_MODE
-    value: agent
+    value: agent                 # genie only after a Genie space exists and is attached
+  - name: CONFIDENCE_THRESHOLD
+    value: "0.825"
+  - name: UC_CATALOG
+    value: infrared
+  - name: UC_SCHEMA
+    value: shpe                  # gold stats the pipeline reads
+  - name: APP_SCHEMA
+    value: mate_app              # MATE's own tables, kept apart from the notebooks' tables in shpe
+  # From the resources attached to the app (databricks.yml or the Apps UI), by resource name:
+  - name: DATABRICKS_WAREHOUSE_ID
+    valueFrom: sql-warehouse
+  - name: LLM_ENDPOINT
+    valueFrom: llm-endpoint
+  # Optional: uncomment after adding a genie-space resource
+  # - name: GENIE_SPACE_ID
+  #   valueFrom: genie-space

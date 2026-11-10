@@ -3,8 +3,13 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
+import logging
+
 from app import config
+from app.dbx import DatabricksUnavailable
 from app.routes import auth, chat, orders
+
+log = logging.getLogger(__name__)
 
 app = FastAPI(title="Failure Analysis Triage API")
 app.include_router(auth.router)
@@ -26,9 +31,29 @@ async def validation_error(_: Request, exc: RequestValidationError):
     return JSONResponse({"error": {"code": "invalid", "message": msg}}, status_code=422)
 
 
+@app.exception_handler(DatabricksUnavailable)
+async def databricks_error(_: Request, exc: DatabricksUnavailable):
+    log.error("databricks unavailable: %s", exc)
+    return JSONResponse({"error": {"code": "databricks_unavailable", "message": str(exc)}}, status_code=503)
+
+
+@app.exception_handler(Exception)
+async def server_error(_: Request, exc: Exception):
+    log.exception("unhandled error")
+    return JSONResponse({"error": {"code": "server_error", "message": "Something went wrong on the server."}},
+                        status_code=500)
+
+
 @app.get("/api/health")
-def health():
-    return {"ok": True, "auth": config.AUTH_MODE, "data": config.DATA_BACKEND, "pipeline": config.PIPELINE}
+def health(deep: bool = False):
+    """Liveness + which modes are on. ?deep=1 also checks Databricks auth and the SQL warehouse."""
+    out = {"ok": True, "auth": config.AUTH_MODE, "data": config.DATA_BACKEND, "pipeline": config.PIPELINE,
+           "llm": config.LLM_MODE, "chat": config.CHAT_MODE, "in_databricks_app": config.IN_DATABRICKS_APP}
+    if deep and "databricks" in (config.DATA_BACKEND, config.LLM_MODE, config.AUTH_MODE):
+        from app import dbx
+        out["databricks"] = dbx.check()
+        out["ok"] = out["databricks"].get("warehouse", False) or config.DATA_BACKEND != "databricks"
+    return out
 
 
 # Production: serve the built React app; unknown non-API paths fall back to index.html.

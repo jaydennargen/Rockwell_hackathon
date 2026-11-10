@@ -2,13 +2,14 @@ import io
 from datetime import datetime, timezone
 from typing import Literal
 
-from fastapi import APIRouter, BackgroundTasks, Depends, File, Header, Request, UploadFile
+from fastapi import APIRouter, BackgroundTasks, Depends, File, Header, Request, Response, UploadFile
 
 from app import config
 from app.auth import current_user, require_specialist
 from app.errors import ApiError, not_found
 from app.jobs import run_triage_job
 from app.repo import get_repo
+from app.report_pdf import render_pdf
 from app.schemas import (BulkResult, EvidenceIn, OrderCreated, OrderIn, OrderList, ReviewIn,
                          TriageReport)
 from app.visibility import RELEASED, filter_report, filter_summary
@@ -34,6 +35,17 @@ def _visible_row(order_id: str, user: dict) -> dict:
     if not row or (user["role"] != "specialist" and row["submitted_by"] != user["email"]):
         raise not_found()
     return row
+
+
+def enrich(row: dict) -> dict:
+    """Report plus what the reference repair report shows that the pipeline doesn't store: the
+    distributor's comments as submitted, the PO number, and the submitter's organization (Sold To)."""
+    r, o = row["report"], row["order"]
+    submitter = get_repo().get_user(row["submitted_by"]) or {}
+    return {**r,
+            "header": {**r["header"], "purchase_order": o.get("purchase_order"), "sold_to": submitter.get("org")},
+            "customer_input": {**r["customer_input"], "raw": o.get("failure_details"),
+                               "additional_info": o.get("additional_info")}}
 
 
 def _summary(row: dict) -> dict:
@@ -75,7 +87,7 @@ def list_orders(filter: Literal["all", "needs_review", "released"] = "all", limi
     mine = None if user["role"] == "specialist" else user["email"]
     rows = get_repo().list_orders(submitted_by=mine)
     if filter == "needs_review":
-        rows = [r for r in rows if r["report"]["status"] == "NEEDS_REVIEW"]
+        rows = [r for r in rows if r["report"]["status"] in ("NEEDS_REVIEW", "FAILED")]  # both need a specialist
     elif filter == "released":
         rows = [r for r in rows if r["report"]["status"] in RELEASED]
     items = [filter_summary(_summary(r), user["role"]) for r in rows[offset: offset + limit]]
@@ -117,7 +129,16 @@ async def bulk(tasks: BackgroundTasks, file: UploadFile = File(...), user: dict 
 
 @router.get("/{order_id}", response_model=TriageReport, response_model_exclude_none=True)
 def get_order(order_id: str, user: dict = Depends(current_user)):
-    return filter_report(_visible_row(order_id, user)["report"], user["role"])
+    return filter_report(enrich(_visible_row(order_id, user)), user["role"])
+
+
+@router.get("/{order_id}/report.pdf", include_in_schema=True)
+def report_pdf(order_id: str, user: dict = Depends(current_user)):
+    """The repair report as a PDF in the reference SAP layout, filtered by role like GET /{order_id}."""
+    report = TriageReport.model_validate(filter_report(enrich(_visible_row(order_id, user)), user["role"]))
+    pdf = render_pdf(report.model_dump(mode="json", by_alias=True))
+    return Response(pdf, media_type="application/pdf",
+                    headers={"Content-Disposition": f'attachment; filename="repair-report-{order_id}.pdf"'})
 
 
 @router.post("/{order_id}/review", response_model=TriageReport, response_model_exclude_none=True)
@@ -142,12 +163,12 @@ def review(order_id: str, body: ReviewIn, user: dict = Depends(require_specialis
     report["updated_at"] = _now()
     get_repo().save_report(order_id, report)
     get_repo().add_feedback(order_id, {**body.model_dump(mode="json"), "reviewer": user["email"]})
-    return filter_report(report, user["role"])
+    return filter_report(enrich({**row, "report": report}), user["role"])
 
 
 @router.post("/{order_id}/evidence", response_model=TriageReport, response_model_exclude_none=True)
 def evidence(order_id: str, body: EvidenceIn, request: Request, x_device_token: str | None = Header(default=None)):
-    if x_device_token != config.DEVICE_TOKEN:
+    if not config.DEVICE_TOKEN or x_device_token != config.DEVICE_TOKEN:  # unset token = device auth off
         try:
             require_specialist(current_user(request))
         except ApiError:
@@ -168,7 +189,7 @@ def evidence(order_id: str, body: EvidenceIn, request: Request, x_device_token: 
     report = rescore_with_evidence(report)
     get_repo().save_report(order_id, report)
     get_repo().add_evidence(order_id, ms)
-    return filter_report(report, "specialist")
+    return filter_report(enrich({**row, "report": report}), "specialist")
 
 
 @router.post("/{order_id}/retry", response_model=OrderCreated)

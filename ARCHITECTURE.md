@@ -162,6 +162,7 @@ In `databricks` mode, identity comes from the user headers Databricks Apps forwa
 | `POST` | `/api/orders` | both | `OrderIn` → `{order_id, status}` (`201`); triage starts in the background |
 | `POST` | `/api/orders/bulk` | both | multipart `file` (.xlsx/.csv with the SAP extract's column names) → `{order_ids: string[], errors: [{row, message}]}` |
 | `GET` | `/api/orders/{order_id}` | both | → `TriageReport` (role-filtered) |
+| `GET` | `/api/orders/{order_id}/report.pdf` | both | → PDF in the reference SAP "Remanufacturing/Repair Report" layout, same role filtering (`app/report_pdf.py`) |
 | `POST` | `/api/orders/{order_id}/review` | specialist | `ReviewIn` → `TriageReport` |
 | `POST` | `/api/orders/{order_id}/evidence` | specialist or `X-Device-Token` | `EvidenceIn` → `TriageReport` (re-scores confidence) |
 | `POST` | `/api/orders/{order_id}/retry` | specialist | → `{order_id, status}` |
@@ -180,7 +181,7 @@ Chat history is stored per (`order_id`, `user_email`).
 ```text
 OrderIn        { order_number: str, line_number: int = 1000, catalog: str, part_number: str,
                  part_description: str, serial_number: str?, depot: str?,
-                 failure_details: str, additional_info: str?, received_date: date? }
+                 failure_details: str, additional_info: str?, received_date: date?, purchase_order: str? }
 
 OrderSummary   { order_id, catalog, part_description, serial_number, status, status_label,
                  submitted_by, created_at,
@@ -188,8 +189,8 @@ OrderSummary   { order_id, catalog, part_description, serial_number, status, sta
 
 TriageReport   { order_id, status, status_label, created_at, updated_at,
                  header:          { order_number, item, part_number, catalog, serial,
-                                    description, depot, received_date },
-                 customer_input:  { text, informative },
+                                    description, depot, received_date, purchase_order?, sold_to? },
+                 customer_input:  { text, informative, raw?, additional_info? },
                  escalation?:     { message, reasons: str[] }              // requester, NEEDS_REVIEW only
                  summary?:        str                                      // Agent 2 narrative
                  predicted?:      { areas: [{category, detail}], causes: str[], rationale }

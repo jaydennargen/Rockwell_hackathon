@@ -1,0 +1,50 @@
+# Databricks bundle: declares the app and the resources its service principal may use, so one
+# `databricks bundle deploy` + `databricks bundle run mate` uploads, grants, and starts it. See DEPLOY.md.
+bundle:
+  name: mate
+
+variables:
+  warehouse_id:
+    description: SQL warehouse the app queries (ID from SQL Warehouses > Connection details)
+    default: 6e4f969ac71d3b26
+  llm_endpoint:
+    description: Model serving endpoint for the triage and chat agents
+    default: databricks-meta-llama-3-3-70b-instruct
+
+sync:
+  exclude:
+    - backend/.data
+    - backend/tests
+    - hardware
+
+resources:
+  apps:
+    mate:
+      name: mate-triage
+      description: "MATE: Maintenance-Assisted Triage Engine"
+      source_code_path: .
+      # Who can open the app (you, as the deployer, can always manage it). Uncomment to let every
+      # workspace user in, e.g. for the demo:
+      # permissions:
+      #   - level: CAN_USE
+      #     group_name: users
+      resources:
+        - name: sql-warehouse
+          sql_warehouse:
+            id: ${var.warehouse_id}
+            permission: CAN_USE
+        - name: llm-endpoint
+          serving_endpoint:
+            name: ${var.llm_endpoint}
+            permission: CAN_QUERY
+        # - name: genie-space
+        #   genie_space:
+        #     name: mate-genie
+        #     space_id: <GENIE_SPACE_ID>
+        #     permission: CAN_RUN
+
+targets:
+  dev:
+    default: true
+    workspace:
+      host: https://dbc-45c9154d-c76b.cloud.databricks.com

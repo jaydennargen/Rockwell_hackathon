@@ -3,6 +3,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+os.environ["MATE_NO_DOTENV"] = "1"  # tests never read a developer's .env
 os.environ.setdefault("MOCK_DELAY_SECONDS", "0")
 os.environ.setdefault("DATA_BACKEND", "memory")
 

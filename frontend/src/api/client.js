@@ -33,6 +33,7 @@ async function request(path, { method = "GET", body, form } = {}) {
 export const demoLogin = (role) => request("/auth/demo-login", { method: "POST", body: { role } });
 export const logout = () => request("/auth/logout", { method: "POST" });
 export const getMe = () => request("/me");
+export const getHealth = () => request("/health");
 
 // orders
 export const listOrders = ({ filter = "all", limit = 50, offset = 0 } = {}) =>
@@ -46,6 +47,20 @@ export const bulkUpload = (file) => {
 export const getOrder = (id) => request(`/orders/${encodeURIComponent(id)}`);
 export const reviewOrder = (id, review) =>
   request(`/orders/${encodeURIComponent(id)}/review`, { method: "POST", body: review });
+// PDF repair report (reference SAP layout). Returns a Blob; same role filtering as getOrder.
+export async function downloadReportPdf(id) {
+  let res;
+  try {
+    res = await fetch(`/api/orders/${encodeURIComponent(id)}/report.pdf`, { credentials: "same-origin" });
+  } catch {
+    throw new ApiError(0, "network", "Can't reach the server. Check that the backend is running.");
+  }
+  if (!res.ok) {
+    const e = (await res.json().catch(() => ({}))).error || {};
+    throw new ApiError(res.status, e.code || "error", e.message || `Download failed (${res.status}).`);
+  }
+  return res.blob();
+}
 export const retryOrder = (id) => request(`/orders/${encodeURIComponent(id)}/retry`, { method: "POST" });
 
 // chat

@@ -11,13 +11,14 @@ to a repair specialist before anything is released. Each order has a chat for fo
 - **How the parallel coding agents work:** [AGENTS.md](AGENTS.md)
 - **Databricks data layer:** [docs/databricks_backend_spec.md](docs/databricks_backend_spec.md)
 - **Status by workstream:** [HANDOFF.md](HANDOFF.md)
+- **Deploy to Databricks Apps:** [DEPLOY.md](DEPLOY.md)
 
 ## Run locally (no credentials needed)
 
 ```bash
 # backend (Python 3.11+)
 cd backend
-pip install -r requirements.txt
+pip install -r requirements-dev.txt
 uvicorn app.main:app --reload --port 8000
 
 # frontend (Node 20+), in a second terminal

@@ -67,7 +67,14 @@ export default function RequestDetailPage() {
     <div className="detail-page">
       {back}
       <div className="detail-grid">
-        <ReportView report={report} />
+        <ReportView
+          report={report}
+          onRetry={
+            role === "specialist"
+              ? () => api.retryOrder(id).then(load).catch((e) => setError(e))
+              : undefined
+          }
+        />
         <aside className="detail-side">
           {role === "specialist" && <ReviewPanel key={report.updated_at} report={report} onReviewed={setReport} />}
           <ChatPanel key={`${report.order_id}-${report.status}`} report={report} role={role} />

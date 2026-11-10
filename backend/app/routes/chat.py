@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends
 
 from app.auth import current_user
 from app.repo import get_repo
-from app.routes.orders import _visible_row
+from app.routes.orders import _visible_row, enrich
 from app.schemas import ChatHistory, ChatIn, ChatReply
 from app.visibility import filter_report
 from chat.agent import chat_reply
@@ -28,7 +28,7 @@ def send(order_id: str, body: ChatIn, user: dict = Depends(current_user)):
            "created_at": datetime.now(timezone.utc).isoformat()}
     repo.add_chat(order_id, user["email"], msg)
     # The agent only ever sees what this user is allowed to see.
-    visible = filter_report(row["report"], user["role"])
+    visible = filter_report(enrich(row), user["role"])
     reply = chat_reply(visible, hist, body.message, user)
     repo.add_chat(order_id, user["email"], reply)
     return {"reply": reply}

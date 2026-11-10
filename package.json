@@ -1,0 +1,11 @@
+{
+  "name": "mate-app",
+  "private": true,
+  "description": "Databricks Apps entry point: the platform runs `npm install` + `npm run build` here, then the app.yaml command.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "npm --prefix frontend ci --include=dev && npm --prefix frontend run build"
+  }
+}

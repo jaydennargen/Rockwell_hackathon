@@ -1,14 +1,15 @@
-"""Delta tables in {UC_CATALOG}.{UC_SCHEMA} via databricks-sql-connector (DATABRICKS_HOST,
-DATABRICKS_HTTP_PATH, DATABRICKS_TOKEN). Same SQL as the SQLite repo (repo/local.py: SqlRepo).
+"""Delta tables in {UC_CATALOG}.{UC_SCHEMA} through the SQL warehouse (app/dbx.py, SDK unified auth).
+Same SQL as the SQLite repo (repo/local.py: SqlRepo).
 
-Not yet run against a workspace: verify table creation and the native `:param` binding on first connect.
-New submissions are also appended to bronze_sap_repairs (ARCHITECTURE.md §6).
+The app's service principal needs USE CATALOG, USE SCHEMA, CREATE TABLE, SELECT, and MODIFY on the schema
+(see DEPLOY.md). Tables are created on first use. New submissions are also appended to
+bronze_sap_repairs when that table exists (ARCHITECTURE.md §6).
 """
 from __future__ import annotations
 
 import logging
 
-from app import config
+from app import config, dbx
 from app.repo.local import DDL, SqlRepo
 
 log = logging.getLogger(__name__)
@@ -16,24 +17,18 @@ log = logging.getLogger(__name__)
 
 class DatabricksRepo(SqlRepo):
     def __init__(self):
-        from databricks import sql as dbsql
-        self._sql = dbsql
-        self.conn_args = {"server_hostname": config.DATABRICKS_HOST.replace("https://", "").rstrip("/"),
-                          "http_path": config.DATABRICKS_HTTP_PATH, "access_token": config.DATABRICKS_TOKEN}
-        self.prefix = f"{config.UC_CATALOG}.{config.UC_SCHEMA}"
+        self.prefix = f"{config.UC_CATALOG}.{config.APP_SCHEMA}"  # app tables; separate from gold stats
         for name, cols in DDL.items():
             self._exec(f"CREATE TABLE IF NOT EXISTS {self.t(name)} ({cols})")
+        if config.AUTH_MODE == "demo":  # role picker needs the demo accounts; real orders stay untouched
+            from app.repo.seed import seed_demo_users
+            seed_demo_users(self)
 
     def t(self, name):
         return f"{self.prefix}.{name}"
 
     def _exec(self, sql, params=None):
-        with self._sql.connect(**self.conn_args) as con, con.cursor() as cur:
-            cur.execute(sql, params or None)
-            if not cur.description:
-                return []
-            cols = [d[0] for d in cur.description]
-            return [dict(zip(cols, r)) for r in cur.fetchall()]
+        return dbx.rows(sql, params)
 
     def create_order(self, order, submitted_by, report):
         super().create_order(order, submitted_by, report)
@@ -44,7 +39,7 @@ class DatabricksRepo(SqlRepo):
 
     def _append_bronze(self, order, submitted_by):
         self._exec(
-            f"INSERT INTO {self.t('bronze_sap_repairs')} (`Order Number`, `Line Number`, `Catalog`, "
+            f"INSERT INTO {config.UC_CATALOG}.{config.UC_SCHEMA}.bronze_sap_repairs (`Order Number`, `Line Number`, `Catalog`, "
             "`Part Number`, `Part Description`, `Serial Number`, `Depot`, `Failure Details`, "
             "`Additional Information`, source, submitted_by, ingested_at) "
             "VALUES (:on, :ln, :cat, :pn, :pd, :sn, :dp, :fd, :ai, 'app_submission', :by, current_timestamp())",

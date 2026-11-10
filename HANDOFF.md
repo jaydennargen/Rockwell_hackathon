@@ -14,6 +14,43 @@ _Proposals to change backend/app/schemas.py, contracts/fixtures, or the API tabl
   next to `cause_dist`; per-area confidence needs it. `product_family` rule is in `triage/tools.py`
   (`product_family()`) and must match the silver notebook.
 
+- **Merged (2026-10-29, approved by the user): repair report fields + PDF route.** `OrderIn.purchase_order`,
+  `Header.purchase_order` / `Header.sold_to` (submitter's org), `CustomerInput.raw` / `additional_info`
+  (distributor comments as submitted). Filled at read time by `routes/orders.enrich()` from the stored
+  order, so the pipeline and stored reports are unchanged. New `GET /api/orders/{id}/report.pdf`.
+
+## Databricks Apps deployment (2026-10-29)
+- **Guide:** [DEPLOY.md](DEPLOY.md). One app: root `package.json` builds the frontend, root
+  `requirements.txt` -> `backend/requirements.txt`, `app.yaml` runs uvicorn on `$DATABRICKS_APP_PORT`,
+  `databricks.yml` bundle declares the app + `sql-warehouse` (CAN_USE) and `llm-endpoint` (CAN_QUERY).
+- **Auth:** all Databricks access goes through `backend/app/dbx.py` (Databricks SDK unified auth): OAuth
+  M2M as the app's service principal when deployed, a `databricks auth login` profile locally. No code
+  reads `DATABRICKS_TOKEN` any more (the SDK still accepts it as a fallback). Users: `X-Forwarded-Email`,
+  role from `app_users` or `SPECIALIST_EMAILS`. Deployed with `AUTH_MODE=demo`: role picker with the demo
+  accounts (seeded into `app_users` on startup, no demo orders); cookie key derived from the app secret.
+- **Manual step:** UC grants for the service principal on `infrared.shpe` (DEPLOY.md step 5).
+- **Verified locally only:** clean-copy build (npm + pip + vite), production command start, SPA/API
+  routing, error paths without credentials, `databricks apps validate`. Not deployed; the SQL against
+  real Delta tables, the serving endpoint, and Genie haven't been run against the workspace yet.
+- **Needs WS6:** `gold_family_stats` (incl. `area_dist`), `gold_part_freq`, `silver_repairs` in
+  `infrared.shpe` with the column names in `triage/stats_repo.py`; otherwise live triage marks orders Failed.
+
+## Repair report + MATE redesign (2026-10-29)
+- **Report** follows `Sample Remanufacturing_Repair Report from SAP.pdf` (repo root, not committed):
+  title band, Sold To / End Customer, the two order tables, then Distributor Input, As Received, Cleaning,
+  Updates, Affected Areas, Parts Replaced, Testing, Probable Cause Code. Web: "Repair report" tab
+  (`components/RepairReport.jsx`). PDF: `app/report_pdf.py` (reportlab, new dependency), same sections.
+- **Provenance on every section:** FROM ORDER, AI PREDICTION - NOT VERIFIED, VERIFIED BY SPECIALIST,
+  PENDING - TECHNICIAN. Post-repair sections are always PENDING; nothing is invented. Rockwell's own
+  wording ("good-faith estimate ... from examining the product", "based on incoming inspections") is
+  replaced with what actually happened, and the footer says it's not an official Rockwell document. The
+  Rockwell logo slot shows the product name.
+- **Not in our data:** Sold To Party number + address, End Customer, Date Shipped, Date of Manufacture,
+  As Received observations, Updates, Parts Replaced, Testing results. Shown as "Not provided" / pending.
+- **Product name** is a working name: `frontend/src/lib/brand.js` and `PRODUCT_NAME` (backend env).
+- **Visual system:** SHPE 2026 palette in `tokens.css` (navy, electric blue, lime, mint, orange, pink),
+  2px navy outlines, hard offset shadows, wide Archivo headings, pixel-grid mark (`Wordmark.jsx`).
+
 ## Build/local-mvp (2026-10-29): WS3 + WS4 + WS5 + UI pass in one branch
 - **Run:** defaults now `DATA_BACKEND=local PIPELINE=mock LLM_MODE=fake CHAT_MODE=fake`. First start creates
   `backend/.data/app.db` and seeds it from the fixtures (`python scripts/seed_demo.py --reset` to start over).

@@ -18,6 +18,12 @@ def demo_data(path=config.FIXTURES):
     return users, orders, chat
 
 
+def seed_demo_users(repo) -> None:
+    """Just the demo accounts (for AUTH_MODE=demo on Databricks; no demo orders)."""
+    for u in demo_data()[0]:
+        repo.add_user(u)
+
+
 def seed_demo(repo) -> None:
     users, orders, chat = demo_data()
     for u in users:

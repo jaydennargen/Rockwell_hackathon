@@ -6,8 +6,10 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [authMode, setAuthMode] = useState("demo"); // demo | databricks (SSO identity, no sign-out)
 
   useEffect(() => {
+    api.getHealth().then((h) => setAuthMode(h.auth)).catch(() => {});
     api.getMe().then(setUser).catch(() => setUser(null)).finally(() => setLoading(false));
   }, []);
 
@@ -23,7 +25,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, role: user?.role, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, role: user?.role, loading, authMode, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

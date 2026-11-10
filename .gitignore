@@ -11,10 +11,22 @@ __pycache__/
 .venv/
 
 # node
-frontend/node_modules/
+node_modules/
 frontend/dist/
 
 # os/editor
 .DS_Store
 .vscode/
 .idea/
+
+# databricks: local auth + CLI/bundle state (never commit or deploy)
+.databrickscfg
+.databricks/
+.env.*
+!.env.example
+*.pem
+*.p12
+
+# reference/source material (not part of the app)
+SHPE2026IMAGE.webp
+Sample Remanufacturing_Repair Report from SAP.pdf

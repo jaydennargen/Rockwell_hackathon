@@ -57,9 +57,8 @@ def _source_procedure(report: dict) -> list[dict]:
 
 
 def _client():
-    from openai import OpenAI
-    return OpenAI(base_url=f"{config.DATABRICKS_HOST.rstrip('/')}/serving-endpoints",
-                  api_key=config.DATABRICKS_TOKEN)
+    from app import dbx
+    return dbx.openai_client()
 
 
 def _agent_reply(report: dict, history: list[dict], message: str, user: dict, client=None) -> dict:

@@ -1,5 +1,7 @@
 """Who is calling. demo: signed cookie set by /api/auth/demo-login.
-databricks: identity header forwarded by Databricks Apps (verify the header name in the Apps docs)."""
+databricks: the user identity Databricks Apps forwards (X-Forwarded-Email, X-Forwarded-Preferred-Username).
+Only trust these headers behind the Databricks Apps proxy; locally use AUTH_MODE=demo.
+Role: app_users row if present, else specialist if listed in SPECIALIST_EMAILS, else requester."""
 import hashlib
 import hmac
 
@@ -23,15 +25,18 @@ def unsign(value: str):
 
 
 def current_user(request: Request) -> dict:
-    repo = get_repo()
     if config.AUTH_MODE == "databricks":
-        email = request.headers.get("X-Forwarded-Email")
+        email = (request.headers.get("X-Forwarded-Email") or "").strip().lower()
         if not email:
-            raise ApiError(401, "unauthenticated", "Sign in through Databricks to use this app.")
-        return repo.get_user(email) or {"email": email, "name": email.split("@")[0],
-                                         "role": "requester", "org": ""}
+            raise ApiError(401, "unauthenticated", "Open this app through Databricks to sign in.")
+        user = get_repo().get_user(email)
+        if user:
+            return user
+        name = request.headers.get("X-Forwarded-Preferred-Username") or email.split("@")[0]
+        role = "specialist" if email in config.SPECIALIST_EMAILS else "requester"
+        return {"email": email, "name": name, "role": role, "org": email.split("@")[-1]}
     email = unsign(request.cookies.get(COOKIE, ""))
-    user = repo.get_user(email) if email else None
+    user = get_repo().get_user(email) if email else None
     if not user:
         raise ApiError(401, "unauthenticated", "Sign in to continue.")
     return user

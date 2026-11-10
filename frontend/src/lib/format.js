@@ -4,6 +4,24 @@ const DATETIME = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeri
 export const fmtDate = (v) => (v ? DATE.format(new Date(String(v).length === 10 ? `${v}T12:00:00` : v)) : "—");
 export const fmtDateTime = (v) => (v ? DATETIME.format(new Date(v)) : "—");
 export const pct = (v) => `${Math.round(v * 100)}%`;
+const pad = (n) => String(n).padStart(2, "0");
+// MM/DD/YYYY like the SAP repair report
+export const fmtSapDate = (v) => {
+  if (!v) return "";
+  const d = new Date(String(v).length === 10 ? `${v}T12:00:00` : v);
+  return `${pad(d.getMonth() + 1)}/${pad(d.getDate())}/${d.getFullYear()}`;
+};
+
+// cause_category -> SAP "Probable Cause Code" wording (mirrors backend/app/report_pdf.py)
+export const CAUSE_SAP = {
+  component_failure: "Component Failure",
+  wear_out: "Worn / End of Life",
+  contamination: "Contamination / Environmental",
+  physical_damage: "Physical / Mechanical Damage",
+  configuration_error: "Configuration Error",
+  no_problem_found: "No Problem Found",
+  external_electrical: "Improper Voltage or Current",
+};
 
 export const AREA_LABELS = {
   pcba_circuitry: "Circuit boards",

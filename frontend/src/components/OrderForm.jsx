@@ -6,6 +6,7 @@ import { nextSample } from "../lib/samples.js";
 const EMPTY = {
   order_number: "", line_number: 1000, catalog: "", part_number: "", part_description: "",
   serial_number: "", depot: "", received_date: "", failure_details: "", additional_info: "",
+  purchase_order: "",
 };
 
 function Field({ label, hint, required, children }) {
@@ -33,7 +34,7 @@ export default function OrderForm() {
     setBusy(true);
     setError(null);
     const body = { ...f, line_number: Number(f.line_number) || 1000 };
-    for (const k of ["serial_number", "depot", "received_date", "additional_info"]) if (!body[k]) body[k] = null;
+    for (const k of ["serial_number", "depot", "received_date", "additional_info", "purchase_order"]) if (!body[k]) body[k] = null;
     try {
       const { order_id } = await api.createOrder(body);
       nav(`/requests/${order_id}`);
@@ -83,6 +84,9 @@ export default function OrderForm() {
           </Field>
           <Field label="Date received">
             <input type="date" value={f.received_date} onChange={set("received_date")} />
+          </Field>
+          <Field label="Purchase order no." hint="Printed on the repair report.">
+            <input value={f.purchase_order} onChange={set("purchase_order")} placeholder="P002226696" />
           </Field>
         </div>
       </fieldset>

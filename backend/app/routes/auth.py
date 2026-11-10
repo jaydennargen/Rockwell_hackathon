@@ -14,7 +14,8 @@ def demo_login(body: DemoLoginIn, response: Response):
     if config.AUTH_MODE != "demo":
         raise ApiError(404, "not_found", "Demo login is disabled.")
     user = get_repo().user_for_role(body.role)
-    response.set_cookie(COOKIE, sign(user["email"]), httponly=True, samesite="lax")
+    response.set_cookie(COOKIE, sign(user["email"]), httponly=True, samesite="lax",
+                        secure=config.IN_DATABRICKS_APP)  # HTTPS-only when deployed
     return user
 
 

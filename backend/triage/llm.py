@@ -1,5 +1,5 @@
 """LLM protocol + FakeLLM (deterministic, LLM_MODE=fake) + DatabricksLLM (OpenAI-compatible serving
-endpoint at {DATABRICKS_HOST}/serving-endpoints, LLM_MODE=databricks)."""
+endpoint at {host}/serving-endpoints, LLM_MODE=databricks)."""
 from __future__ import annotations
 
 import json
@@ -86,13 +86,20 @@ class FakeLLM:
 
 
 class DatabricksLLM:
-    def __init__(self, host: str, token: str, endpoint: str):
-        from openai import OpenAI
-        self.client = OpenAI(base_url=f"{host.rstrip('/')}/serving-endpoints", api_key=token)
+    """Serving endpoint via the OpenAI-compatible API; auth comes from the Databricks SDK (app/dbx.py)."""
+
+    def __init__(self, endpoint: str):
+        from app import dbx
+        if not endpoint:
+            raise dbx.DatabricksUnavailable("LLM_ENDPOINT isn't set (the app's llm-endpoint resource).")
+        self.client = dbx.openai_client()
         self.endpoint = endpoint
 
     def complete(self, system, user, *, task, json_mode=False):
-        kw = {"response_format": {"type": "json_object"}} if json_mode else {}
+        kw = {}
+        if json_mode:  # Databricks endpoints require the word "json" in the user message for this mode
+            kw = {"response_format": {"type": "json_object"}}
+            user = user + "\n\nRespond with a json object only."
         r = self.client.chat.completions.create(
             model=self.endpoint, temperature=0, max_tokens=800,
             messages=[{"role": "system", "content": system}, {"role": "user", "content": user}], **kw)
@@ -102,5 +109,5 @@ class DatabricksLLM:
 def get_llm():
     from app import config
     if config.LLM_MODE == "databricks":
-        return DatabricksLLM(config.DATABRICKS_HOST, config.DATABRICKS_TOKEN, config.LLM_ENDPOINT)
+        return DatabricksLLM(config.LLM_ENDPOINT)
     return FakeLLM()

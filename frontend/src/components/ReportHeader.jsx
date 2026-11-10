@@ -13,7 +13,7 @@ export default function ReportHeader({ report }) {
     ["Line", h.item],
   ];
   return (
-    <header className="report-head">
+    <header className="card report-head">
       <div className="report-head-top">
         <div>
           <p className="kicker">Repair order</p>

@@ -59,6 +59,7 @@ class OrderIn(BaseModel):
     failure_details: str = ""
     additional_info: Optional[str] = None
     received_date: Optional[date] = None
+    purchase_order: Optional[str] = None
 
 
 class OrderCreated(BaseModel):
@@ -99,11 +100,15 @@ class Header(BaseModel):
     description: str
     depot: Optional[str] = None
     received_date: Optional[date] = None
+    purchase_order: Optional[str] = None  # as entered on the order
+    sold_to: Optional[str] = None         # submitter's organization (app_users.org)
 
 
 class CustomerInput(BaseModel):
     text: str
     informative: bool
+    raw: Optional[str] = None             # distributor's comments exactly as submitted
+    additional_info: Optional[str] = None
 
 
 class Escalation(BaseModel):

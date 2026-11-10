@@ -27,13 +27,27 @@ class StatsRepo(Protocol):
 
 
 def _obj(v):
+    """JSON string (SQLite, or the SQL connector without pyarrow) or native value (connector with pyarrow:
+    arrays come back as numpy arrays, MAP columns as a list of (key, value) pairs)."""
     if v is None:
         return None
     if isinstance(v, (bytes, str)):
         return json.loads(v)
     if hasattr(v, "tolist"):
-        return v.tolist()
-    return dict(v) if hasattr(v, "items") else list(v)
+        v = v.tolist()
+    if hasattr(v, "items"):
+        return dict(v)
+    return list(v)
+
+
+def _map(v) -> dict:
+    """A MAP column as a dict, whichever form the driver returned."""
+    v = _obj(v)
+    if not v:
+        return {}
+    if isinstance(v, dict):
+        return v
+    return {k: val for k, val in v}  # list of (key, value) pairs
 
 
 class _SqlStats:
@@ -48,8 +62,8 @@ class _SqlStats:
         if not rows:
             return None
         r = dict(rows[0])
-        r["cause_dist"] = _obj(r.get("cause_dist")) or {}
-        r["area_dist"] = _obj(r.get("area_dist")) or {}
+        r["cause_dist"] = _map(r.get("cause_dist"))
+        r["area_dist"] = _map(r.get("area_dist"))
         return r
 
     def part_freq(self, family, cause, k=3):
@@ -100,29 +114,21 @@ class LocalStatsRepo(_SqlStats):
 
 
 class DatabricksStatsRepo(_SqlStats):
-    """Delta tables in {UC_CATALOG}.{UC_SCHEMA} through a SQL warehouse."""
+    """Delta tables in {UC_CATALOG}.{UC_SCHEMA} through the SQL warehouse (app/dbx.py, SDK unified auth)."""
 
-    def __init__(self, host: str, http_path: str, token: str, catalog: str, schema: str):
-        self.conn_args = {"server_hostname": host.replace("https://", "").rstrip("/"),
-                          "http_path": http_path, "access_token": token}
+    def __init__(self, catalog: str, schema: str):
         self.prefix = f"{catalog}.{schema}"
 
     def t(self, name):
         return f"{self.prefix}.{name}"
 
-    def _cursor_rows(self, sql, params):
-        from databricks import sql as dbsql
-        with dbsql.connect(**self.conn_args) as con, con.cursor() as cur:
-            cur.execute(sql, params or None)
-            cols = [d[0] for d in cur.description]
-            return cols, [tuple(r) for r in cur.fetchall()]
-
     def _rows(self, sql, params):
-        cols, rows = self._cursor_rows(sql, params)
-        return [dict(zip(cols, r)) for r in rows]
+        from app import dbx
+        return dbx.rows(sql, params)
 
     def query(self, sql):
-        return self._cursor_rows(sql, {})
+        from app import dbx
+        return dbx.query(sql)
 
 
 class MemoryStatsRepo:
@@ -152,8 +158,7 @@ def get_stats_repo():
     if _stats is None:
         from app import config
         if config.DATA_BACKEND == "databricks":
-            _stats = DatabricksStatsRepo(config.DATABRICKS_HOST, config.DATABRICKS_HTTP_PATH,
-                                         config.DATABRICKS_TOKEN, config.UC_CATALOG, config.UC_SCHEMA)
+            _stats = DatabricksStatsRepo(config.UC_CATALOG, config.UC_SCHEMA)
         else:
             _stats = LocalStatsRepo(config.GOLD_DB)
     return _stats
